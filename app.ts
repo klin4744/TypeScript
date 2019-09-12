@@ -1,60 +1,45 @@
-enum Move {
-   Empty,
-   X,
-   O,
-}
-class TickTacToe {
-   private won: [boolean, string];
-   private board: Move[][];
-   private currentPlayer: Move;
-   constructor() {
-      this.won = [false, ''];
-      this.board = [
-         [Move.Empty, Move.Empty, Move.Empty],
-         [Move.Empty, Move.Empty, Move.Empty],
-         [Move.Empty, Move.Empty, Move.Empty],
-      ];
-      this.currentPlayer = Move.X;
-   }
-   public getBoard(): Move[][] {
-      return this.board;
-   }
-   public getGameState(): string {
-      if (this.won[0]) {
-         return `The ${this.won[1]} player has won!`;
-      }
-      return `No one has won yet`;
-   }
-   public makeMove(player: Move, position: [number, number]): void {
-      try {
-         if (this.board[position[0]][position[1]])
-            throw new Error(
-               'That spot is occupied! Please Make a different move',
-            );
-         this.board[position[0]][position[1]] === player;
-         if (this.checkWon()) {
-            this.won[1] = player === Move.X ? 'X' : 'O';
-            this.getGameState();
-         }
-         console.log(`Move made! by ${player}`);
-         player === Move.X
-            ? (this.currentPlayer = Move.O)
-            : (this.currentPlayer = Move.X);
-      } catch (error) {
-         console.log(error.message);
-      }
-   }
-   public checkWon(): boolean {
-      let arrStr: string = this.board.join('\n').replace(/,/g, '');
-      let winRegex = /1{3}|2{3}|1.{2}\n.1.\n.{2}1|2.{2}\n.2.\n.{2}2|1.{2}\n1.{2}\n1.{2}|2.{2}\n2.{2}\n2.{2}|.1.\n.1.\n.1.|.2.\n.2.\n.2.|.{2}1\n.{2}1\n.{2}1|.{2}2\n.{2}2\n.{2}2/;
-      let matches: any = arrStr.match(winRegex);
-      if (matches) {
-         this.won[0] = true;
-      }
-      return true;
-   }
-}
+import TickTackToe from './game';
 
-const game: TickTacToe = new TickTacToe();
-console.log(game.getBoard());
-console.log(game.checkWon());
+const table: HTMLTableElement = document.querySelector('table');
+const cells: NodeListOf<HTMLTableDataCellElement> = document.querySelectorAll(
+   'td',
+);
+const game: TickTackToe = new TickTackToe();
+
+// Event listeners
+table.addEventListener('click', evt => {
+   playMove(evt);
+   paintBoard();
+});
+
+// functions
+function playMove(evt: Event) {
+   let target = <HTMLTableDataCellElement>evt.target;
+   if (target.tagName === 'TD') {
+      let position: [number, number];
+      let id = parseInt(target.id);
+      if (id <= 2) {
+         position = [0, id];
+      } else if (id <= 5) {
+         position = [1, id - 3];
+      } else {
+         position = [2, id - 6];
+      }
+      game.makeMove(position);
+   }
+}
+function paintBoard() {
+   const board: number[][] = game.getBoard();
+   let currentPosition: number = 0;
+   for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board[0].length; j++) {
+         if (board[i][j] === 1) {
+            cells[currentPosition].innerText = 'X';
+         } else if (board[i][j] === 2) {
+            cells[currentPosition].innerText = 'O';
+         }
+         currentPosition++;
+      }
+   }
+}
+console.log(cells);
