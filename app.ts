@@ -5,6 +5,7 @@ const cells: NodeListOf<HTMLTableDataCellElement> = document.querySelectorAll(
    'td',
 );
 const game: TickTackToe = new TickTackToe();
+const h3: HTMLHeadingElement = document.querySelector('h3');
 
 // Event listeners
 table.addEventListener('click', evt => {
@@ -25,7 +26,7 @@ function playMove(evt: Event) {
       } else {
          position = [2, id - 6];
       }
-      game.makeMove(position);
+      h3.innerText = game.makeMove(position);
    }
 }
 function paintBoard() {
@@ -42,4 +43,3 @@ function paintBoard() {
       }
    }
 }
-console.log(cells);

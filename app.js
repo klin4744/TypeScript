@@ -2,6 +2,7 @@ import TickTackToe from './game';
 var table = document.querySelector('table');
 var cells = document.querySelectorAll('td');
 var game = new TickTackToe();
+var h3 = document.querySelector('h3');
 // Event listeners
 table.addEventListener('click', function (evt) {
     playMove(evt);
@@ -22,7 +23,7 @@ function playMove(evt) {
         else {
             position = [2, id - 6];
         }
-        game.makeMove(position);
+        h3.innerText = game.makeMove(position);
     }
 }
 function paintBoard() {
@@ -40,4 +41,3 @@ function paintBoard() {
         }
     }
 }
-console.log(cells);

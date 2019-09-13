@@ -25,18 +25,20 @@ var TickTacToe = /** @class */ (function () {
     };
     TickTacToe.prototype.makeMove = function (position) {
         try {
+            if (this.won[0])
+                return "No more moves can be made. Player " + this.won[1] + " has won!";
             if (this.board[position[0]][position[1]])
                 throw new Error('That spot is occupied! Please Make a different move');
             this.board[position[0]][position[1]] = this.currentPlayer;
             if (this.checkWon()) {
                 this.won[1] = this.currentPlayer === Move.X ? 'X' : 'O';
-                this.getGameState();
             }
-            console.log("Move made! by " + this.currentPlayer);
             this.currentPlayer === Move.X
                 ? (this.currentPlayer = Move.O)
                 : (this.currentPlayer = Move.X);
-            this.getGameState();
+            if (this.won[1])
+                return "Player " + this.won[1] + " has won!";
+            return "Move made! by " + this.currentPlayer;
         }
         catch (error) {
             console.log(error.message);
